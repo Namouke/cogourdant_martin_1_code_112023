@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Création d'un schéma de données pour les sauces
 const sauceSchema = mongoose.Schema({
     userId: { type: String, required: true },
     name: { type: String, required: true },
@@ -15,4 +16,6 @@ const sauceSchema = mongoose.Schema({
 },
     { timestamps: true });
 
+
+// On exporte le schéma en modèle utilisable
 module.exports = mongoose.model('Sauce', sauceSchema);
