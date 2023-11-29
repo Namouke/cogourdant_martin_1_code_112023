@@ -90,20 +90,25 @@ exports.modifySauce = (req, res, next) => {
 
 // Middleware de la fonctionnalité like ou dislike d'une sauce
 exports.likeSauce = (req, res, next) => {
+    // Recherche de la sauce par son identifiant dans la base de données
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
 
-            let like = req.body.like;
-            let userId = req.auth.userId;
-            let likesIndex = -1;
-            let dislikesIndex = -1;
+            // Récupération des données de la requête
+            let like = req.body.like; // Valeur du like (-1 pour dislike, 0 pour annuler, 1 pour like)
+            let userId = req.auth.userId; // Identifiant de l'utilisateur effectuant l'action de like, dislike ou pour retirer son vote
+            let likesIndex = -1; // Index de l'utilisateur dans le tableau des likes
+            let dislikesIndex = -1; // Index de l'utilisateur dans le tableau des dislikes
 
+            // Boucle For in pour parcourir le tableau des utilisateurs ayant aimé la sauce
             for (let i in sauce.usersLiked) {
                 const user = sauce.usersLiked[i];
                 if (user == userId) {
                     likesIndex = i;
                 }
             }
+
+            // Gestion des likes
             if (like == 1 && likesIndex == -1) {
                 sauce.usersLiked.push(userId)
             }
@@ -111,14 +116,18 @@ exports.likeSauce = (req, res, next) => {
                 sauce.usersLiked.splice(likesIndex, 1)
             }
 
+            // Mise à jour du nombre total de likes
             sauce.likes = sauce.usersLiked.length;
 
+            // Boucle For in pour parcourir le tableau des utilisateurs n'ayant pas aimé la sauce
             for (let i in sauce.usersDisliked) {
                 const user = sauce.usersDisliked[i];
                 if (user == userId) {
                     dislikesIndex = i;
                 }
             }
+
+            // Gestion des dislikes
             if (like == -1 && dislikesIndex == -1) {
                 sauce.usersDisliked.push(userId)
             }
@@ -126,8 +135,10 @@ exports.likeSauce = (req, res, next) => {
                 sauce.usersDisliked.splice(dislikesIndex, 1)
             }
 
+            // Mise à jour du nombre total de dislikes
             sauce.dislikes = sauce.usersDisliked.length;
 
+            // Sauvegarde des modifications dans la base de données
             return sauce.save()
                 .then(() => {
                     console.log(sauce);
