@@ -14,11 +14,11 @@ const sauceRoutes = require('./routes/Sauce');
 const app = express();
 
 // Connexion à la base de données MongoDB 
-mongoose.connect(`mongodb+srv://${process.env.mongodb_login}:${process.env.mongodb_password}@go-fullstack.iwl5che.mongodb.net/?retryWrites=true&w=majority`,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+mongoose.connect(`mongodb+srv://${process.env.mongodb_login}:${process.env.mongodb_password}@go-fullstack.iwl5che.mongodb.net/?retryWrites=true&w=majority`)
+   // {
+        // useNewUrlParser: true,
+        // useUnifiedTopology: true
+   // }
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
